@@ -13,19 +13,19 @@ namespace PracticTask3.Requests
 
             Console.WriteLine($"Информация о клиентах, заказавших {ProductName}:");
             var WorksheetProducts = CurrentWorkbook.Worksheet("Товары");
-            var ProductNamerange = WorksheetProducts.Range("B2", "B1000000");
+            var ProductNameRange = WorksheetProducts.Range(WorksheetProducts.Cell(2, "B"), WorksheetProducts.Cell(WorksheetProducts.RowCount(), "B"));
 
             var WorksheetClients = CurrentWorkbook.Worksheet("Клиенты");
-            var ClientIdRange = WorksheetClients.Range("A2", "A1000000");
+            var ClientIdRange = WorksheetClients.Range(WorksheetClients.Cell(2, "A"), WorksheetClients.Cell(WorksheetClients.RowCount(), "A"));
 
             var WorksheetOrders = CurrentWorkbook.Worksheet("Заявки");
-            var ProductIdRange = WorksheetOrders.Range("B2", "B1000000");
+            var ProductIdRange = WorksheetOrders.Range(WorksheetOrders.Cell(2, "B"), WorksheetOrders.Cell(WorksheetOrders.RowCount(), "B"));
 
             bool ProductFound = false;
             bool ProductIdFound = false;
             bool ClientFound = false;
 
-            foreach (var ProdName in ProductNamerange.CellsUsed())
+            foreach (var ProdName in ProductNameRange.CellsUsed())
             {  
                 if (ProdName.Value.ToString() == ProductName)
                 {

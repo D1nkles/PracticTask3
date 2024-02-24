@@ -16,7 +16,7 @@ namespace PracticTask3.Requests
             bool OrganisationNameFound = false;
 
             var WorksheetClients = CurrentWorkbook.Worksheet("Клиенты");
-            var OrganisationNamesRange = WorksheetClients.Range("B2", "B1000000");
+            var OrganisationNamesRange = WorksheetClients.Range(WorksheetClients.Cell(2,"B"),WorksheetClients.Cell(WorksheetClients.RowCount(), "B"));
 
             foreach (var OrgName in OrganisationNamesRange.CellsUsed())
             {

@@ -19,7 +19,7 @@ namespace PracticTask3.Requests
             bool DateExists = false;
 
             var WorksheetOrders = CurrentWorkbook.Worksheet("Заявки");
-            var OrderDatesRange = WorksheetOrders.Range("F2", "F1000000");
+            var OrderDatesRange = WorksheetOrders.Range(WorksheetOrders.Cell(2, "F"), WorksheetOrders.Cell(WorksheetOrders.RowCount(), "F"));
 
             Dictionary<string, int> ClientCodes = new Dictionary<string, int>();
 
