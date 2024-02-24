@@ -11,6 +11,7 @@ namespace PracticTask3.Requests
             Console.Write("Введите наименование товара: ");
             string ?ProductName = Console.ReadLine();
 
+            Console.WriteLine($"Информация о клиентах, заказавших {ProductName}:");
             var WorksheetProducts = CurrentWorkbook.Worksheet("Товары");
             var ProductNamerange = WorksheetProducts.Range("B2", "B1000000");
 
@@ -42,8 +43,9 @@ namespace PracticTask3.Requests
                         if (ProdCode.Value.ToString() == ProductId)
                         {
                             ProductIdFound = true;
-                            Console.WriteLine($"Информация о клиентах, заказавших {ProductName}:\n" +
-                                      $"==========================================================================================");
+
+                            Console.WriteLine("==========================================================================================");
+
                             int IdRowNumber = ProdCode.WorksheetRow().RowNumber();
                             int IdColumnNumber = ProdCode.WorksheetColumn().ColumnNumber();
 

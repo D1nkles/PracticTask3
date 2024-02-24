@@ -24,7 +24,7 @@ namespace PracticTask3
                                   "4. Закрыть программу.");
                 Console.WriteLine("==========================================================================================\n");
 
-                Console.Write("Введите номер команды, которую вы хотите исполнить: \n");
+                Console.Write("Введите номер команды, которую вы хотите исполнить: ");
                 string UserInput = Console.ReadLine();
 
                 if (RequestStorage.ContainsKey(UserInput)) 
@@ -40,14 +40,11 @@ namespace PracticTask3
 
                 if (!RequestStorage.ContainsKey(UserInput)) 
                 {
-                    Console.WriteLine("Команды с таким номером нет в списке доступных команд. Нажмите на любую клавишу, что поробовать снова!");
+                    Console.WriteLine("Команды с таким номером нет в списке доступных команд! Нажмите на любую клавишу, чтобы поробовать снова...");
                     Console.ReadLine();
                     continue;
-                }
-
-                
+                } 
             }
         }
-        
     }
 }
