@@ -42,6 +42,7 @@ namespace PracticTask3
                 {
                     Console.WriteLine("Команды с таким номером нет в списке доступных команд! Нажмите на любую клавишу, чтобы поробовать снова...");
                     Console.ReadLine();
+                    Console.Clear();
                     continue;
                 } 
             }

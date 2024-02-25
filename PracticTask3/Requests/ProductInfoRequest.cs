@@ -98,6 +98,7 @@ namespace PracticTask3.Requests
             }
             Console.WriteLine("Нажмите на любую клавишу, чтобы вернуться к списку доступных команд...");
             Console.ReadLine();
+            Console.Clear();
         }
     }
 }

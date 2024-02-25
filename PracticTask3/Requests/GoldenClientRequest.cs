@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Drawing;
 
 namespace PracticTask3.Requests
 {
@@ -9,66 +10,96 @@ namespace PracticTask3.Requests
         {
             Console.WriteLine("Введите год и месяц в числовом формате за которые будет выведен клиент с наибольшим кол-вом заказов:");
             Console.Write("Год: ");
-            int Year = int.Parse(Console.ReadLine());
+            string YearCheck = Console.ReadLine();
+
+            int Year = 0;
+            bool YearIsInt = true;
+
+            try { Year = int.Parse(YearCheck); }
+            catch(Exception) 
+            {
+                YearIsInt = false;
+            }
+ 
             Console.Write("Месяц: ");
-            int Month = int.Parse(Console.ReadLine());
-      
-            var StartDate = new DateTime(Year, Month, 1);
-            var EndDate = new DateTime(Year, Month, DateTime.DaysInMonth(Year, Month));
+            string MonthCheck = (Console.ReadLine());
+            
+            int Month = 0;  
+            bool MonthIsInt = true;
 
-            bool DateExists = false;
-
-            var WorksheetOrders = CurrentWorkbook.Worksheet("Заявки");
-            var OrderDatesRange = WorksheetOrders.Range(WorksheetOrders.Cell(2, "F"), WorksheetOrders.Cell(WorksheetOrders.RowCount(), "F"));
-
-            Dictionary<string, int> ClientCodes = new Dictionary<string, int>();
-
-            foreach (var OrderDate in OrderDatesRange.CellsUsed())
+            try { Month = int.Parse(MonthCheck); }
+            catch (Exception)
             {
-                var CellsDate = OrderDate.GetDateTime();
-                if (CellsDate >= StartDate && CellsDate <= EndDate)
+                MonthIsInt = false;
+            }
+
+            if (YearIsInt && MonthIsInt)
+            {
+                var StartDate = new DateTime(Year, Month, 1);
+                var EndDate = new DateTime(Year, Month, DateTime.DaysInMonth(Year, Month));
+
+                bool DateExists = false;
+
+                var WorksheetOrders = CurrentWorkbook.Worksheet("Заявки");
+                var OrderDatesRange = WorksheetOrders.Range(WorksheetOrders.Cell(2, "F"), WorksheetOrders.Cell(WorksheetOrders.RowCount(), "F"));
+
+                Dictionary<string, int> ClientCodes = new Dictionary<string, int>();
+
+                foreach (var OrderDate in OrderDatesRange.CellsUsed())
                 {
-                    DateExists = true;
-                    var CellsDateRow = OrderDate.WorksheetRow().RowNumber();
-                    var CellsDateColumn = OrderDate.WorksheetColumn().ColumnNumber();
-
-                    var ClientCodeCell = WorksheetOrders.Cell(CellsDateRow, CellsDateColumn - 3);
-                    var ClientCodeValue = ClientCodeCell.Value.ToString();
-
-                    if (ClientCodes.ContainsKey(ClientCodeValue))
+                    var CellsDate = OrderDate.GetDateTime();
+                    if (CellsDate >= StartDate && CellsDate <= EndDate)
                     {
-                        ClientCodes[ClientCodeValue]++;
-                    }
-                    else
-                    {
-                        ClientCodes[ClientCodeValue] = 1;
+                        DateExists = true;
+                        var CellsDateRow = OrderDate.WorksheetRow().RowNumber();
+                        var CellsDateColumn = OrderDate.WorksheetColumn().ColumnNumber();
+
+                        var ClientCodeCell = WorksheetOrders.Cell(CellsDateRow, CellsDateColumn - 3);
+                        var ClientCodeValue = ClientCodeCell.Value.ToString();
+
+                        if (ClientCodes.ContainsKey(ClientCodeValue))
+                        {
+                            ClientCodes[ClientCodeValue]++;
+                        }
+                        else
+                        {
+                            ClientCodes[ClientCodeValue] = 1;
+                        }
                     }
                 }
-            }
-            string? GoldenClientCode = null;
-            int ClientCodeCount = 0;
+                string? GoldenClientCode = null;
+                int ClientCodeCount = 0;
 
-            foreach (var CheckClientCode in ClientCodes)
-            {
-                if (CheckClientCode.Value > ClientCodeCount)
+                foreach (var CheckClientCode in ClientCodes)
                 {
-                    ClientCodeCount = CheckClientCode.Value;
-                    GoldenClientCode = CheckClientCode.Key;
+                    if (CheckClientCode.Value > ClientCodeCount)
+                    {
+                        ClientCodeCount = CheckClientCode.Value;
+                        GoldenClientCode = CheckClientCode.Key;
+                    }
                 }
-            }
-            if (DateExists) 
-            { 
-            Console.WriteLine("==========================================================================================\n" +
-                             $">>Код клиента с наибольшим кол-вом заказов за запрошенные даты: {GoldenClientCode}\n");
-            }
+                if (DateExists)
+                {
+                    Console.WriteLine("==========================================================================================\n" +
+                                     $">>Код клиента с наибольшим кол-вом заказов за запрошенные даты: {GoldenClientCode}\n");
+                }
 
-            if (!DateExists) 
+                if (!DateExists)
+                {
+                    Console.WriteLine("==========================================================================================\n" +
+                                      ">>Такой даты размещения заказа нет в листе Заявки.");
+                }
+                
+
+            }
+            else 
             {
                 Console.WriteLine("==========================================================================================\n" +
-                                  "В листе Заявки нет такой даты размещения заказа.");
+                                  ">>Вы ввели данные в неверном формате.");
             }
             Console.WriteLine("Нажмите на любую клавишу, чтобы вернуться к списку доступных команд...");
             Console.ReadLine();
+            Console.Clear();
         }
     }
 }
