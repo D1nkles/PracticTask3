@@ -35,62 +35,73 @@ namespace PracticTask3.Requests
 
             if (YearIsInt && MonthIsInt)
             {
-                var StartDate = new DateTime(Year, Month, 1);
-                var EndDate = new DateTime(Year, Month, DateTime.DaysInMonth(Year, Month));
+                bool IsDatable = true;
+                var StartDate = new DateTime();
 
-                bool DateExists = false;
+                try { StartDate = new DateTime(Year, Month, 1); }
+                catch(Exception) { IsDatable = false; }
 
-                var WorksheetOrders = CurrentWorkbook.Worksheet("Заявки");
-                var OrderDatesRange = WorksheetOrders.Range(WorksheetOrders.Cell(2, "F"), WorksheetOrders.Cell(WorksheetOrders.RowCount(), "F"));
-
-                Dictionary<string, int> ClientCodes = new Dictionary<string, int>();
-
-                foreach (var OrderDate in OrderDatesRange.CellsUsed())
+                if (IsDatable)
                 {
-                    var CellsDate = OrderDate.GetDateTime();
-                    if (CellsDate >= StartDate && CellsDate <= EndDate)
+                    var EndDate = new DateTime(Year, Month, DateTime.DaysInMonth(Year, Month));
+
+                    bool DateExists = false;
+
+                    var WorksheetOrders = CurrentWorkbook.Worksheet("Заявки");
+                    var OrderDatesRange = WorksheetOrders.Range(WorksheetOrders.Cell(2, "F"), WorksheetOrders.Cell(WorksheetOrders.RowCount(), "F"));
+
+                    Dictionary<string, int> ClientCodes = new Dictionary<string, int>();
+
+                    foreach (var OrderDate in OrderDatesRange.CellsUsed())
                     {
-                        DateExists = true;
-                        var CellsDateRow = OrderDate.WorksheetRow().RowNumber();
-                        var CellsDateColumn = OrderDate.WorksheetColumn().ColumnNumber();
-
-                        var ClientCodeCell = WorksheetOrders.Cell(CellsDateRow, CellsDateColumn - 3);
-                        var ClientCodeValue = ClientCodeCell.Value.ToString();
-
-                        if (ClientCodes.ContainsKey(ClientCodeValue))
+                        var CellsDate = OrderDate.GetDateTime();
+                        if (CellsDate >= StartDate && CellsDate <= EndDate)
                         {
-                            ClientCodes[ClientCodeValue]++;
-                        }
-                        else
-                        {
-                            ClientCodes[ClientCodeValue] = 1;
+                            DateExists = true;
+                            var CellsDateRow = OrderDate.WorksheetRow().RowNumber();
+                            var CellsDateColumn = OrderDate.WorksheetColumn().ColumnNumber();
+
+                            var ClientCodeCell = WorksheetOrders.Cell(CellsDateRow, CellsDateColumn - 3);
+                            var ClientCodeValue = ClientCodeCell.Value.ToString();
+
+                            if (ClientCodes.ContainsKey(ClientCodeValue))
+                            {
+                                ClientCodes[ClientCodeValue]++;
+                            }
+                            else
+                            {
+                                ClientCodes[ClientCodeValue] = 1;
+                            }
                         }
                     }
-                }
-                string? GoldenClientCode = null;
-                int ClientCodeCount = 0;
+                    string? GoldenClientCode = null;
+                    int ClientCodeCount = 0;
 
-                foreach (var CheckClientCode in ClientCodes)
-                {
-                    if (CheckClientCode.Value > ClientCodeCount)
+                    foreach (var CheckClientCode in ClientCodes)
                     {
-                        ClientCodeCount = CheckClientCode.Value;
-                        GoldenClientCode = CheckClientCode.Key;
+                        if (CheckClientCode.Value > ClientCodeCount)
+                        {
+                            ClientCodeCount = CheckClientCode.Value;
+                            GoldenClientCode = CheckClientCode.Key;
+                        }
+                    }
+                    if (DateExists)
+                    {
+                        Console.WriteLine("==========================================================================================\n" +
+                                         $">>Код клиента с наибольшим кол-вом заказов за запрошенные даты: {GoldenClientCode}\n");
+                    }
+
+                    if (!DateExists)
+                    {
+                        Console.WriteLine("==========================================================================================\n" +
+                                          ">>Такой даты размещения заказа нет в листе Заявки.");
                     }
                 }
-                if (DateExists)
+                else 
                 {
                     Console.WriteLine("==========================================================================================\n" +
-                                     $">>Код клиента с наибольшим кол-вом заказов за запрошенные даты: {GoldenClientCode}\n");
+                                      ">>Введенного вами года и (или) месяца не существует."  );
                 }
-
-                if (!DateExists)
-                {
-                    Console.WriteLine("==========================================================================================\n" +
-                                      ">>Такой даты размещения заказа нет в листе Заявки.");
-                }
-                
-
             }
             else 
             {
