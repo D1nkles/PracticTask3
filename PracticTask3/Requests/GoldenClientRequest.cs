@@ -5,7 +5,6 @@ namespace PracticTask3.Requests
 {
     internal class GoldenClientRequest : IRequest
     {
-        public int Id => 3;
         void IRequest.ExecuteRequest(XLWorkbook CurrentWorkbook) 
         {
             Console.WriteLine("Введите год и месяц в числовом формате за которые будет выведен клиент с наибольшим кол-вом заказов:");

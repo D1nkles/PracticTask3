@@ -4,7 +4,6 @@ namespace PracticTask3.Requests
 {
     internal class ClientNameChangeRequest : IRequest
     {
-        public int Id => 2;
         void IRequest.ExecuteRequest(XLWorkbook CurrentWorkbook) 
         {
             Console.Write("Введите название организации: ");
@@ -33,7 +32,18 @@ namespace PracticTask3.Requests
 
                     ClientNameCell.Value = NewClientName;
 
-                    xlsxFileManager.SaveFile(CurrentWorkbook);
+                    try
+                    {
+                        xlsxFileManager.SaveFile(CurrentWorkbook);
+                    }
+
+                    catch (System.IO.IOException)
+                    {
+                        Console.WriteLine("Ошибка: Изменения не удалось сохранить в файл! Если файл используется в каком-то другом процессе, остановите его и попробуйте снова.\n" +
+                            "Нажмите на любую клавишу, чтобы продолжить...");
+                        Console.ReadLine();
+                        break;
+                    }
 
                     Console.WriteLine($">>Наименование запрошенной организации: {OrgName.Value.ToString()}\n" +
                                       $">>Новое контактное лицо запрошенной организации: {ClientNameCell.Value.ToString()}\n");

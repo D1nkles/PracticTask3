@@ -4,8 +4,6 @@ namespace PracticTask3.Requests
 {
     internal class ProductInfoRequest : IRequest
     {
-        public int Id => 1;
-
         void IRequest.ExecuteRequest(XLWorkbook CurrentWorkbook) 
         {
             Console.Write("Введите наименование товара: ");
